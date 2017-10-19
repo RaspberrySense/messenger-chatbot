@@ -1,4 +1,5 @@
 import os, sys
+import random
 from flask import Flask, request
 from pymessenger import Bot
 
