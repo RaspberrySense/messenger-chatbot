@@ -1,7 +1,7 @@
 import os, sys
 import random
 from flask import Flask, request
-from utils import wit_response
+#from utils import wit_response
 from pymessenger import Bot
 
 app = Flask(__name__)
@@ -10,7 +10,7 @@ PAGE_ACCESS_TOKEN = "EAAa4SLDVfmYBAMWZAK6RkTRrE52AsWOI6lZCl50QVfOltUv7OuFvZBb9py
 
 bot = Bot(PAGE_ACCESS_TOKEN)
 
-#greeting_list = ['hi','hey','hello','whats up']
+greeting_list = ['hi','hey','hello','whats up']
 
 
 @app.route('/', methods=['GET'])
@@ -43,12 +43,12 @@ def webhook():
 					else:
 						messaging_text = 'nothing'
 
-					''' # Echo
+					 # Echo
 					messaging_text = random.choice(greeting_list)
 					response = messaging_text
 					bot.send_text_message(sender_id, response)
-					'''
-					response  = None
+					
+					'''response  = None
 
 					entity, value = wit_response(messaging_text)
 
@@ -61,6 +61,7 @@ def webhook():
 						response = "Sorry!!!"
 						
 					bot.send_text_message(sender_id, response)
+					'''
 
 	return "ok", 200
 
