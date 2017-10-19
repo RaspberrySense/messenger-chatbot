@@ -14,4 +14,5 @@ def wit_response(message_text):
 		value = resp['entities'][entity][0]['value']
 	except:
 		pass
+		
 	return (entity, value)
