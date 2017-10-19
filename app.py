@@ -58,7 +58,7 @@ def webhook():
 						response = "I will run Temp script."
 
 					if response == None:
-						response = "Sorry!!!!"
+						response = "Sorry!!!"
 						
 					bot.send_text_message(sender_id, response)
 
