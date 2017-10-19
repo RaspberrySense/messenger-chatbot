@@ -8,6 +8,8 @@ PAGE_ACCESS_TOKEN = "EAAa4SLDVfmYBAMWZAK6RkTRrE52AsWOI6lZCl50QVfOltUv7OuFvZBb9py
 
 bot = Bot(PAGE_ACCESS_TOKEN)
 
+greeting_list = ['hi','hey','hello','whats up']
+
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -37,9 +39,10 @@ def webhook():
 					if 'text' in messaging_event['message']:
 						messaging_text = messaging_event['message']['text']
 					else:
-						messaging_text = 'no text'
+						messaging_text = 'nothing'
 
 					# Echo
+					messaging_text = random.choice(greeting_list)
 					response = messaging_text
 					bot.send_text_message(sender_id, response)
 
