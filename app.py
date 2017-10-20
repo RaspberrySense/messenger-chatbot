@@ -55,7 +55,7 @@ def webhook():
 					if response == None:
 						response = "Sorry!!!"   '''
 
-						response = random.choice(greeting_list)
+					response = random.choice(greeting_list)
 
 					bot.send_text_message(sender_id, response)
 
