@@ -1,7 +1,6 @@
 import os, sys
 import random
 from flask import Flask, request
-from wit import Wit
 from utils import wit_response
 from pymessenger import Bot
 
