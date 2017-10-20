@@ -65,6 +65,7 @@ def webhook():
 
 
 					bot.send_text_message(sender_id, response)
+					bot.send_text_message(sender_id, response)
 
 					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
