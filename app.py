@@ -39,9 +39,10 @@ def webhook():
 				if messaging_event.get('message'):
 					# Extracting text message
 					if 'text' in messaging_event['message']:
-						messaging_text = messaging_event['message']['text']
+						#messaging_text = messaging_event['message']['text']
+						response = random.choice(greeting_list)
 					else:
-						messaging_text = 'nothing'
+						response = messaging_event['message']
 					
 					'''response = None
 
@@ -55,7 +56,6 @@ def webhook():
 					if response == None:
 						response = "Sorry!!!"   '''
 
-					response = random.choice(greeting_list)
 
 					bot.send_text_message(sender_id, response)
 
