@@ -10,8 +10,8 @@ PAGE_ACCESS_TOKEN = "EAAa4SLDVfmYBAMWZAK6RkTRrE52AsWOI6lZCl50QVfOltUv7OuFvZBb9py
 
 bot = Bot(PAGE_ACCESS_TOKEN)
 
-greeting_list = ['hi','hey','hello','whats up']
-thank_list = ['Thanks','Thank you','Thank you very much']
+greeting_list = ['hi','hey','hello','whats up','Hi','Hello','Hey']
+thank_list = ['Thanks','Thank you','Thank you very much','thanks','thank you','thank you very much']
 thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you"]
 
 @app.route('/', methods=['GET'])
