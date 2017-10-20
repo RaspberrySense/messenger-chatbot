@@ -10,7 +10,8 @@ PAGE_ACCESS_TOKEN = "EAAa4SLDVfmYBAMWZAK6RkTRrE52AsWOI6lZCl50QVfOltUv7OuFvZBb9py
 
 bot = Bot(PAGE_ACCESS_TOKEN)
 
-greeting_list = ['hi','hey','hello','whats up']
+greeting_list = ['hi','hey','hello','whats up','👍']
+happy= u'\U0001F604' 
 
 
 @app.route('/', methods=['GET'])
@@ -43,7 +44,7 @@ def webhook():
 						#response = random.choice(greeting_list)
 						response = messaging_text
 					else:
-						response = 'dunno'
+						response = '👍'
 					
 					'''response = None
 
