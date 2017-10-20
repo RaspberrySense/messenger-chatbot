@@ -11,8 +11,8 @@ PAGE_ACCESS_TOKEN = "EAAa4SLDVfmYBAMWZAK6RkTRrE52AsWOI6lZCl50QVfOltUv7OuFvZBb9py
 bot = Bot(PAGE_ACCESS_TOKEN)
 
 greeting_list = ['hi','hey','hello','whats up']
-happy= u'\U0001F604' 
-
+thank_list = ['Thanks','Thank you','Thank you very much']
+thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you"]
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -37,11 +37,17 @@ def webhook():
 				sender_id = messaging_event['sender']['id']
 				recipient_id = messaging_event['recipient']['id']
 
+				# FROM HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 				if messaging_event.get('message'):
 					# Extracting text message
 					if 'text' in messaging_event['message']:
 						# messaging_text = messaging_event['message']['text']
-						response = random.choice(greeting_list)
+						if word in greeting_list:
+							response = random.choice(greeting_list)
+						elif word in thank_list:
+							response = random.choice(thank_ret_list)
+						else:
+							response = messaging_event['message']['text']
 					else:
 						response = '👍'
 					
@@ -59,6 +65,8 @@ def webhook():
 
 
 					bot.send_text_message(sender_id, response)
+
+					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	return "ok", 200
 
