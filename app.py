@@ -42,7 +42,7 @@ def webhook():
 						#messaging_text = messaging_event['message']['text']
 						response = random.choice(greeting_list)
 					else:
-						response = messaging_event['message']['text']
+						response = 'dunno'
 					
 					'''response = None
 
