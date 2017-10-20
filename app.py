@@ -41,13 +41,13 @@ def webhook():
 				if messaging_event.get('message'):
 					# Extracting text message
 					if 'text' in messaging_event['message']:
-						# messaging_text = messaging_event['message']['text']
+						word = messaging_event['message']['text']
 						if word in greeting_list:
 							response = random.choice(greeting_list)
 						elif word in thank_list:
 							response = random.choice(thank_ret_list)
 						else:
-							response = messaging_event['message']['text']
+							response = word
 					else:
 						response = '👍'
 					
