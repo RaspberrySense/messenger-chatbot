@@ -1,6 +1,7 @@
 import os, sys
 import random
 from flask import Flask, request
+from utils import wit_response
 from pymessenger import Bot
 
 app = Flask(__name__)
@@ -9,8 +10,9 @@ PAGE_ACCESS_TOKEN = "***REMOVED***"
 
 bot = Bot(PAGE_ACCESS_TOKEN)
 
-greeting_list = ['hi','hey','hello','whats up']
-
+greeting_list = ['hi','hey','hello','whats up','Hi','Hello','Hey']
+thank_list = ['Thanks','Thank you','Thank you very much','thanks','thank you','thank you very much']
+thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you",'😇','☺']
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -35,17 +37,41 @@ def webhook():
 				sender_id = messaging_event['sender']['id']
 				recipient_id = messaging_event['recipient']['id']
 
+				# FROM HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 				if messaging_event.get('message'):
+
 					# Extracting text message
+
 					if 'text' in messaging_event['message']:
 						messaging_text = messaging_event['message']['text']
-					else:
-						messaging_text = 'nothing'
+						entity, value = wit_response(messaging_text)
 
-					# Echo
-					messaging_text = random.choice(greeting_list)
-					response = messaging_text
+						# selecting action to be done
+
+						if entity == 'greeting_keyword':
+							response = random.choice(greeting_list)
+						elif entity == 'light_keyword':
+							response = "I will run LDR script"
+						elif entity == "temp_keyword":
+							response = "I will run Tempscript"
+						elif entity == 'camera_keyword':
+							response = "I will run Camera script"
+						elif entity == 'motion_keyword':
+							response = "I will run Infrared motion script"
+						elif entity == 'humidity_keyword':
+							response = "I will run humidity sensor script"
+						elif entity == 'thank_keyword':
+							response = random.choice(thank_ret_list)
+						elif entity == 'blush_keyword':
+							response = random.choice(thank_list)
+						else:
+							response = "Sorry! I didn't understand."
+					else:
+						response = '👍'
+					
 					bot.send_text_message(sender_id, response)
+
+					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 	return "ok", 200
 
