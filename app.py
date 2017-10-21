@@ -1,7 +1,7 @@
 import os, sys
 import random
 from flask import Flask, request
-#from utils import wit_response
+from utils import wit_response
 from pymessenger import Bot
 
 app = Flask(__name__)
@@ -41,7 +41,7 @@ def webhook():
 				if messaging_event.get('message'):
 					# Extracting text message
 					if 'text' in messaging_event['message']:
-						word = messaging_event['message']['text']
+						'''word = messaging_event['message']['text']
 						if word in greeting_list:
 							response = random.choice(greeting_list)
 						elif word in thank_list:
@@ -49,9 +49,9 @@ def webhook():
 						else:
 							response = word
 					else:
-						response = '👍'
+						response = '👍'''
 					
-					'''response = None
+					response = None
 
 					entity, value = wit_response(messaging_text)
 
@@ -61,7 +61,7 @@ def webhook():
 						response == "I will run Tempscript"
 
 					if response == None:
-						response = "Sorry!!!"   '''
+						response = "Sorry!!!"   
 
 
 					bot.send_text_message(sender_id, response)
