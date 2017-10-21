@@ -48,7 +48,7 @@ def webhook():
 
 						# selecting action to be done
 
-						if entity == 'greeting_keyword'
+						if entity == 'greeting_keyword':
 							response = random.choice(greeting_list)
 						elif entity == 'light_keyword':
 							response = "I will run LDR script"
