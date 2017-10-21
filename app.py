@@ -39,31 +39,36 @@ def webhook():
 
 				# FROM HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 				if messaging_event.get('message'):
+
 					# Extracting text message
+
 					if 'text' in messaging_event['message']:
 						messaging_text = messaging_event['message']['text']
-						'''if word in greeting_list:
+						entity, value = wit_response(messaging_text)
+
+						# selecting action to be done
+
+						if entity == 'greeting_keyword'
 							response = random.choice(greeting_list)
-						elif word in thank_list:
+						elif entity == 'light_keyword':
+							response = "I will run LDR script"
+						elif entity == "temp_keyword":
+							response = "I will run Tempscript"
+						elif entity == 'camera_keyword':
+							response = "I will run Camera script"
+						elif entity == 'motion_keyword':
+							response = "I will run Infrared motion script"
+						elif entity == 'humidity_keyword':
+							response = "I will run humidity sensor script"
+						elif entity == 'thank_keyword':
 							response = random.choice(thank_ret_list)
+						elif entity == 'blush_keyword':
+							response = random.choice(thank_list)
 						else:
-							response = word
+							response = "Sorry! I didn't understand."
 					else:
-						response = '👍'''
+						response = '👍'
 					
-					response = None
-
-					entity, value = wit_response(messaging_text)
-
-					if entity == 'light_keyword':
-						response = "I will run LDR script"
-					elif entity == "temp_keyword":
-						response == "I will run Tempscript"
-
-					if response == None:
-						response = "Sorry!!!"   
-
-
 					bot.send_text_message(sender_id, response)
 
 					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
