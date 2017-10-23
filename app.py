@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 import random
 from flask import Flask, request
 from utils import wit_response
@@ -9,76 +10,72 @@ app = Flask(__name__)
 
 bot = Bot(secrets.PAGE_ACCESS_TOKEN)
 
-greeting_list = ['hi','hey','hello','whats up','Hi','Hello','Hey']
-thank_list = ['Thanks','Thank you','Thank you very much','thanks','thank you','thank you very much']
-thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you",'😇','☺']
+greeting_list = ['hi', 'hey', 'hello', 'whats up', 'Hi', 'Hello', 'Hey']
+thank_list = ['Thanks', 'Thank you', 'Thank you very much',
+              'thanks', 'thank you', 'thank you very much']
+thank_ret_list = ['No problem', "It's my job",
+                  'I am happy to help you', "It's my pleasure to serve you", '😇', '☺']
+
 
 @app.route('/', methods=['GET'])
 def verify():
-	#Webhook verification
-	if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
-		if not request.args.get("hub.verify_token") == "hello":
-			return "Verification token mismatch", 403
-		return request.args["hub.challenge"], 200
-	return "Hello world", 200
+    # Webhook verification
+    if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
+        if not request.args.get("hub.verify_token") == "hello":
+            return "Verification token mismatch", 403
+        return request.args["hub.challenge"], 200
+    return "Hello world", 200
 
 
 @app.route('/', methods=['POST'])
 def webhook():
-	data = request.get_json()
-	log(data)
+    data = request.get_json()
+    log(data)
 
-	if data['object'] == 'page':
-		for entry in data['entry']:
-			for messaging_event in entry['messaging']:
+    if data['object'] == 'page':
+        for entry in data['entry']:
+            for messaging_event in entry['messaging']:
+                # get sender and recipient IDs
+                sender_id = messaging_event['sender']['id']
+                recipient_id = messaging_event['recipient']['id']
 
-				# IDs
-				sender_id = messaging_event['sender']['id']
-				recipient_id = messaging_event['recipient']['id']
+                if messaging_event.get('message'):
+                    # extract the text message
+                    if 'text' in messaging_event['message']:
+                        messaging_text = messaging_event['message']['text']
+                        entity, value = wit_response(messaging_text)
 
-				# FROM HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-				if messaging_event.get('message'):
+                        # select an action to perform
+                        if entity == 'greeting_keyword':
+                            response = random.choice(greeting_list)
+                        elif entity == 'light_keyword':
+                            response = "I will run LDR script"
+                        elif entity == "temp_keyword":
+                            response = "I will run Tempscript"
+                        elif entity == 'camera_keyword':
+                            response = "I will run Camera script"
+                        elif entity == 'motion_keyword':
+                            response = "I will run Infrared motion script"
+                        elif entity == 'humidity_keyword':
+                            response = "I will run humidity sensor script"
+                        elif entity == 'thank_keyword':
+                            response = random.choice(thank_ret_list)
+                        elif entity == 'blush_keyword':
+                            response = random.choice(thank_list)
+                        else:
+                            response = "Sorry! I didn't understand."
+                    else:
+                        response = '👍'
 
-					# Extracting text message
+                    bot.send_text_message(sender_id, response)
 
-					if 'text' in messaging_event['message']:
-						messaging_text = messaging_event['message']['text']
-						entity, value = wit_response(messaging_text)
-
-						# selecting action to be done
-
-						if entity == 'greeting_keyword':
-							response = random.choice(greeting_list)
-						elif entity == 'light_keyword':
-							response = "I will run LDR script"
-						elif entity == "temp_keyword":
-							response = "I will run Tempscript"
-						elif entity == 'camera_keyword':
-							response = "I will run Camera script"
-						elif entity == 'motion_keyword':
-							response = "I will run Infrared motion script"
-						elif entity == 'humidity_keyword':
-							response = "I will run humidity sensor script"
-						elif entity == 'thank_keyword':
-							response = random.choice(thank_ret_list)
-						elif entity == 'blush_keyword':
-							response = random.choice(thank_list)
-						else:
-							response = "Sorry! I didn't understand."
-					else:
-						response = '👍'
-
-					bot.send_text_message(sender_id, response)
-
-					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-	return "ok", 200
+    return "ok", 200
 
 
 def log(message):
-	print(message)
-	sys.stdout.flush()
+    print(message)
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":
-	app.run(debug = True, port = 80)
+    app.run(debug=True, port=80)
