@@ -100,3 +100,6 @@ myenv/
 
 # mypy
 .mypy_cache/
+
+# Secret keys and tokens
+secrets.py

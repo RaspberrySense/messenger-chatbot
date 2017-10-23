@@ -3,12 +3,11 @@ import random
 from flask import Flask, request
 from utils import wit_response
 from pymessenger import Bot
+import secrets
 
 app = Flask(__name__)
 
-PAGE_ACCESS_TOKEN = "***REMOVED***"
-
-bot = Bot(PAGE_ACCESS_TOKEN)
+bot = Bot(secrets.PAGE_ACCESS_TOKEN)
 
 greeting_list = ['hi','hey','hello','whats up','Hi','Hello','Hey']
 thank_list = ['Thanks','Thank you','Thank you very much','thanks','thank you','thank you very much']
@@ -68,7 +67,7 @@ def webhook():
 							response = "Sorry! I didn't understand."
 					else:
 						response = '👍'
-					
+
 					bot.send_text_message(sender_id, response)
 
 					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
