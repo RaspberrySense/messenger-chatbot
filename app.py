@@ -52,6 +52,7 @@ def webhook():
 				############ while script ###################
 
 					value1 = light_script()
+					response = value1
 					bot.send_text_message(sender_id, response)
 
 				###############################################
