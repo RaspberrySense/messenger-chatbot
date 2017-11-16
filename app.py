@@ -1,5 +1,6 @@
 import os, sys
 import random
+import time
 from flask import Flask, request
 from utils import wit_response
 from pymessenger import Bot
@@ -50,12 +51,11 @@ def webhook():
 				recipient_id = messaging_event['recipient']['id']
 
 				############ while script ###################
-
+				time.sleep(10)
 				value1 = light_script()
-				if (value1 <= 10):
-					response = value1
-					bot.send_text_message(sender_id, response)
-				
+				response = value1
+				bot.send_text_message(sender_id, response)
+
 
 				###############################################
 
