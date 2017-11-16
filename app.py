@@ -51,10 +51,11 @@ def webhook():
 				recipient_id = messaging_event['recipient']['id']
 
 				############ while script ###################
-				'''time.sleep(10)
-				value1 = light_script()
-				response = value1
-				bot.send_text_message(sender_id, response)'''
+				value1 = 0
+				if value1 < 10:
+					value1 = light_script()
+					reply_value = value1
+					bot.send_text_message(sender_id, reply_value)
 
 
 				###############################################
