@@ -49,6 +49,13 @@ def webhook():
 				sender_id = messaging_event['sender']['id']
 				recipient_id = messaging_event['recipient']['id']
 
+				############ while script ###################
+
+					value1 = light_script()
+					bot.send_text_message(sender_id, response)
+
+				###############################################
+
 				# FROM HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 				if messaging_event.get('message'):
 
