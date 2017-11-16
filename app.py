@@ -14,6 +14,18 @@ greeting_list = ['hi','hey','hello','whats up','Hi','Hello','Hey']
 thank_list = ['Thanks','Thank you','Thank you very much','thanks','thank you','thank you very much']
 thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you",'😇','☺']
 
+############################### Working ##################
+
+def light_script():
+	light_value = random.randint(1,20)
+	return light_value
+
+def temp_script():
+	temp_value = random.randint(16,100)
+	return temp_value
+
+##########################################################
+
 @app.route('/', methods=['GET'])
 def verify():
 	#Webhook verification
@@ -51,9 +63,9 @@ def webhook():
 						if entity == 'greeting_keyword':
 							response = random.choice(greeting_list)
 						elif entity == 'light_keyword':
-							response = "I will run LDR script"
+							response = light_script()
 						elif entity == "temp_keyword":
-							response = "I will run Tempscript"
+							response = temp_script()
 						elif entity == 'camera_keyword':
 							response = "I will run Camera script"
 						elif entity == 'motion_keyword':
