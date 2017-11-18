@@ -53,8 +53,7 @@ def webhook():
 				############ while script ###################
 				value1 = light_script()
 				if value1 < 10 and value1 > 5:
-					reply_value = value1
-					bot.send_text_message(sender_id, reply_value)
+					bot.send_text_message(sender_id, value1)
 
 				###############################################
 
