@@ -52,10 +52,9 @@ def webhook():
 
 				############ while script ###################
 				value1 = light_script()
-				if (value1 < 10):
+				if value1 < 10 && value1 > 5:
 					reply_value = value1
 					bot.send_text_message(sender_id, reply_value)
-					break
 
 				###############################################
 
@@ -73,9 +72,9 @@ def webhook():
 						if entity == 'greeting_keyword':
 							response = random.choice(greeting_list)
 						elif entity == 'light_keyword':
-							response = light_script()
+							response = "Light script"
 						elif entity == "temp_keyword":
-							response = temp_script()
+							response = "Temp script"
 						elif entity == 'camera_keyword':
 							response = "I will run Camera script"
 						elif entity == 'motion_keyword':
