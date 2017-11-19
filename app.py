@@ -37,8 +37,6 @@ def verify():
 	return "Hello world", 200
 
 
-sender_id = messaging_event['sender']['id']
-
 @app.route('/', methods=['POST'])
 def webhook():
 	data = request.get_json()
