@@ -95,7 +95,7 @@ def webhook():
 								response = None
 						elif intent == "check_light_on_or_off":
 							#if is_light_on():
-							response "lights on"
+							response = "lights on"
 							#else:
 								#response "lights off"
 						elif intent == "check_light_off":
