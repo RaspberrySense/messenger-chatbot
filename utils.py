@@ -12,9 +12,9 @@ def wit_response(message_text):
 
 	try:
 		for entity in resp['entities']:
-			value = resp['entities'][entity][0]['value']['value']
+			value = resp['entities'][entity][0]['value']
 			entity_list.append((entity, value))
-		intent = resp['intent']['value']['value']
+		intent = resp['intent']['value']
 	except:
 		pass
 		
