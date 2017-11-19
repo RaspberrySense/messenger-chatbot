@@ -75,7 +75,7 @@ def webhook():
 						elif entity == "temp_keyword":
 							response = "Temp script"
 						elif entity == 'camera_keyword':
-							response = sender_id
+							response = "camera script"
 						elif entity == 'motion_keyword':
 							response = "I will run Infrared motion script"
 						elif entity == 'humidity_keyword':
