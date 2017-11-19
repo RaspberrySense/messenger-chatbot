@@ -5,14 +5,14 @@ access_token = "KG7AUFYAF6W5PTB7KBZ5CQVH32O24UIG"
 client = Wit(access_token = access_token)
 
 def wit_response(message_text):
-	resp = client.message(message_text)
+	resp = client.message(message_text)['nlp']['entities']
 	
 	entity_list = []
 	intent = None
 
 	try:
-		for entity in resp['entities']:
-			value = resp['entities'][entity][0]['value']
+		for entity in resp:
+			value = resp[entity][0]['value']
 			entity_list.append((entity, value))
 		intent = resp['intent'][0]['value']
 	except:
