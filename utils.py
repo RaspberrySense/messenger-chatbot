@@ -8,12 +8,14 @@ def wit_response(message_text):
 	resp = client.message(message_text)
 	
 	entity_list = []
+	intent = None
 
 	try:
 		for entity in resp['entities']:
-		value = resp['entities'][entity][0]['value']['value']
-		entity_list.append((entity, value))
+			value = resp['entities'][entity][0]['value']['value']
+			entity_list.append((entity, value))
+		intent = resp['intent']['value']['value']
 	except:
 		pass
 		
-	return entity_list
+	return entity_list, intent

@@ -64,32 +64,67 @@ def webhook():
 
 					if 'text' in messaging_event['message']:
 						messaging_text = messaging_event['message']['text']
-						entity, value = wit_response(messaging_text)
+						entity_list, intent = wit_response(messaging_text)
 
 						# selecting action to be done
 
-						if entity == 'greeting_keyword':
-							response = random.choice(greeting_list)
-						elif entity == 'light_keyword':
-							response = "light script"
-						elif entity == "temp_keyword":
-							response = "Temp script"
-						elif entity == 'camera_keyword':
-							response = "camera script"
-						elif entity == 'motion_keyword':
-							response = "I will run Infrared motion script"
-						elif entity == 'humidity_keyword':
-							response = "I will run humidity sensor script"
-						elif entity == 'thank_keyword':
-							response = random.choice(thank_ret_list)
-						elif entity == 'blush_keyword':
-							response = random.choice(thank_list)
+						if intent == "get_temp":							#T
+							temp_value = 'temp_script()'
+							response = temp_value							#E
+						elif intent == "check_temp_low":
+							if value == "cold":								#M
+								response = 'check_temp_low()'
+							else:											#P
+								response = None
+						elif intent == "check_temp_high":					#E
+							if value == "hot":
+								response = 'check_temp_high()'
+							else:
+								response = None
+						elif intent == "get_humidity":
+							response = 'humidity_script()'
+						elif intent == "check_humidity_low":
+							if value == "dry":
+								response = 'check_humidity_low()'
+							else:
+								response = None
+						elif intent == "check_humidity_high":
+							if value == "humid":
+								response = 'check_humidity_high()'
+							else:
+								response = None
+						elif intent == "check_light_on_or_off":
+							#if is_light_on():
+							response "lights on"
+							#else:
+								#response "lights off"
+						elif intent == "check_light_off":
+							if value == "dark":
+								response = 'check_light_off()'
+							else:
+								response = None
+						elif intent == "check_light_on":
+							if value == "bright":
+								response = 'check_light_on()'
+							else:
+								response = None
+						elif intent == "get_image":
+							if value == "image":
+								response = 'get_image()'
+							elif value == "images":
+								#for img in wit/number:
+								response = 'get_image()'
+									#bot.send_text_message(sender_id, response)
+									#time.sleep(60)
+								#flag_status = "Sent"
 						else:
-							response = "Sorry! I didn't understand."
-					else:
-						response = '👍'
-					
-					bot.send_text_message(sender_id, response)
+							response = 'bye'
+								
+
+
+
+					if response != None:
+						bot.send_text_message(sender_id, response)
 
 					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
