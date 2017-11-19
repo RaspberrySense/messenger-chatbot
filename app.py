@@ -59,9 +59,13 @@ def webhook():
 
 				# FROM HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 				if messaging_event.get('message'):
-					# Extracting text message
+					if (messaging_event['message'].get('nlp')):
+						if (messaging_event['message']['nlp'].get('entities')):
+							if (messaging_event['message']['nlp']['entities'].get('intent')):
+								if (messaging_event['message']['nlp']['entities']['intent'][0].get('value')):
+									bot.send_text_message(sender_id, messaging_event['message']['nlp']['entities']['intent'][0]['value'])
 
-					if 'text' in messaging_event['message']:
+					'''if 'text' in messaging_event['message']:
 						messaging_text = messaging_event['message']['text']
 						#entity_list, intent = wit_response(messaging_text)
 						if (messaging_event['message']['nlp']['entities'] and messaging_event['message']['nlp']['entities']['intent']):
@@ -70,7 +74,7 @@ def webhook():
 							bot.send_text_message(sender_id, "dunno")
 						# selecting action to be done
 
-						'''if intent == "get_temp":							#T
+						if intent == "get_temp":							#T
 							temp_value = 'temp_script()'
 							response = 'temp_value'							#E
 						elif intent == "check_temp_low":
