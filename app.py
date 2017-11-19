@@ -60,6 +60,7 @@ def webhook():
 				# FROM HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 				if messaging_event.get('message'):
 
+
 					# Extracting text message
 
 					if 'text' in messaging_event['message']:
