@@ -68,7 +68,7 @@ def webhook():
 						bot.send_text_message(sender_id, str(messaging_event))
 						# selecting action to be done
 
-						if intent == "get_temp":							#T
+						'''if intent == "get_temp":							#T
 							temp_value = 'temp_script()'
 							response = 'temp_value'							#E
 						elif intent == "check_temp_low":
@@ -124,7 +124,7 @@ def webhook():
 
 
 				
-					bot.send_text_message(sender_id, response)
+					bot.send_text_message(sender_id, response)'''
 
 					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
