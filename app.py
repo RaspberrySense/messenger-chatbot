@@ -63,76 +63,62 @@ def webhook():
 						if (messaging_event['message']['nlp'].get('entities')):
 							if (messaging_event['message']['nlp']['entities'].get('intent')):
 								if (messaging_event['message']['nlp']['entities']['intent'][0].get('value')):
-									bot.send_text_message(sender_id, messaging_event['message']['nlp']['entities']['intent'][0]['value'])
+									intent = messaging_event['message']['nlp']['entities']['intent'][0]['value']
+									entity, value_list = messaging_event['message']['nlp']['entities'].items()
+									value = value_list[0]['value']
 
-					'''if 'text' in messaging_event['message']:
-						messaging_text = messaging_event['message']['text']
-						#entity_list, intent = wit_response(messaging_text)
-						if (messaging_event['message']['nlp']['entities'] and messaging_event['message']['nlp']['entities']['intent']):
-							bot.send_text_message(sender_id, messaging_event['message']['nlp']['entities']['intent'][0]['value'])
-						else:
-							bot.send_text_message(sender_id, "dunno")
-						# selecting action to be done
-
-						if intent == "get_temp":							#T
-							temp_value = 'temp_script()'
-							response = 'temp_value'							#E
-						elif intent == "check_temp_low":
-							if value == "cold":								#M
-								response = 'check_temp_low()'
-							else:											#P
-								response = None
-						elif intent == "check_temp_high":					#E
-							if value == "hot":
-								response = 'check_temp_high()'
-							else:
-								response = None
-						elif intent == "get_humidity":
-							response = 'humidity_script()'
-						elif intent == "check_humidity_low":
-							if value == "dry":
-								response = 'check_humidity_low()'
-							else:
-								response = None
-						elif intent == "check_humidity_high":
-							if value == "humid":
-								response = 'check_humidity_high()'
-							else:
-								response = None
-						elif intent == "check_light_on_or_off":
-							#if is_light_on():
-							response = "lights on"
-							#else:
-								#response "lights off"
-						elif intent == "check_light_off":
-							if value == "dark":
-								response = 'check_light_off()'
-							else:
-								response = None
-						elif intent == "check_light_on":
-							if value == "bright":
-								response = 'check_light_on()'
-							else:
-								response = None
-						elif intent == "get_image":
-							if value == "image":
-								response = 'get_image()'
-							elif value == "images":
-								#for img in wit/number:
-								response = 'get_image()'
-									#bot.send_text_message(sender_id, response)
-									#time.sleep(60)
-								#flag_status = "Sent"
-						else:
-							response = intent
-								
-
-
-
-				
-					bot.send_text_message(sender_id, response)'''
-
-					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+									if intent == "get_temp":							#T
+										temp_value = 'temp_script()'
+										response = 'temp_value'							#E
+									elif intent == "check_temp_low":
+										if value == "cold":								#M
+											response = 'check_temp_low()'
+										else:											#P
+											response = None
+									elif intent == "check_temp_high":					#E
+										if value == "hot":
+											response = 'check_temp_high()'
+										else:
+											response = None
+									elif intent == "get_humidity":
+										response = 'humidity_script()'
+									elif intent == "check_humidity_low":
+										if value == "dry":
+											response = 'check_humidity_low()'
+										else:
+											response = None
+									elif intent == "check_humidity_high":
+										if value == "humid":
+											response = 'check_humidity_high()'
+										else:
+											response = None
+									elif intent == "check_light_on_or_off":
+										#if is_light_on():
+										response = "lights on"
+										#else:
+											#response "lights off"
+									elif intent == "check_light_off":
+										if value == "dark":
+											response = 'check_light_off()'
+										else:
+											response = None
+									elif intent == "check_light_on":
+										if value == "bright":
+											response = 'check_light_on()'
+										else:
+											response = None
+									elif intent == "get_image":
+										if value == "image":
+											response = 'get_image()'
+										elif value == "images":
+											#for img in wit/number:
+											response = 'get_image()'
+												#bot.send_text_message(sender_id, response)
+												#time.sleep(60)
+											#flag_status = "Sent"
+									else:
+										response = "???"
+								bot.send_text_message(sender_id, response)
 
 	return "ok", 200
 
