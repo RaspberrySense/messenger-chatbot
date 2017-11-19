@@ -7,8 +7,10 @@ Facebook Messenger chatbot for Raspberry Sense.
    ```bash
    pip install -r requirements.txt
    ```
-1. Create `secrets.py` and add the `PAGE_ACCESS_TOKEN` to it.
-1. Set the `FLASK_APP` environment variable to `app.py`, the Flask app to be run:
+1. Create `secrets.py` and add the following variables with their proper values:
+   * `FACEBOOK_VERIFY_TOKEN`
+   * `PAGE_ACCESS_TOKEN`
+1. Set the `FLASK_APP` environment variable to `app.py`:
    ```bash
    export FLASK_APP=app.py
    ```
