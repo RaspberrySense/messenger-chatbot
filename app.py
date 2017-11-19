@@ -70,7 +70,7 @@ def webhook():
 
 						if intent == "get_temp":							#T
 							temp_value = 'temp_script()'
-							response = temp_value							#E
+							response = 'temp_value'							#E
 						elif intent == "check_temp_low":
 							if value == "cold":								#M
 								response = 'check_temp_low()'
