@@ -37,6 +37,8 @@ def verify():
 	return "Hello world", 200
 
 
+sender_id = messaging_event['sender']['id']
+
 @app.route('/', methods=['POST'])
 def webhook():
 	data = request.get_json()
@@ -51,11 +53,11 @@ def webhook():
 				recipient_id = messaging_event['recipient']['id']
 
 				############ while script ###################
-				value1 = light_script()
+				'''value1 = light_script()
 				if value1 < 10 and value1 > 5:
-					bot.send_text_message(sender_id, value1)
+					bot.send_text_message(sender_id, value1)'''
 
-				###############################################
+				##############################################
 
 				# FROM HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 				if messaging_event.get('message'):
@@ -75,7 +77,7 @@ def webhook():
 						elif entity == "temp_keyword":
 							response = "Temp script"
 						elif entity == 'camera_keyword':
-							response = "I will run Camera script"
+							response = sender_id
 						elif entity == 'motion_keyword':
 							response = "I will run Infrared motion script"
 						elif entity == 'humidity_keyword':
