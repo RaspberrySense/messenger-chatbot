@@ -5,7 +5,7 @@ access_token = "KG7AUFYAF6W5PTB7KBZ5CQVH32O24UIG"
 client = Wit(access_token = access_token)
 
 def wit_response(message_text):
-	resp = client.message(message_text)['nlp']['entities']
+	resp = client.message(message_text)['entities']
 	
 	entity_list = []
 	intent = None
