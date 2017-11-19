@@ -71,7 +71,7 @@ def webhook():
 						if entity == 'greeting_keyword':
 							response = random.choice(greeting_list)
 						elif entity == 'light_keyword':
-							response = "Light script"
+							response = "light script"
 						elif entity == "temp_keyword":
 							response = "Temp script"
 						elif entity == 'camera_keyword':

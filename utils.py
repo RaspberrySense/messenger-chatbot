@@ -7,13 +7,13 @@ client = Wit(access_token = access_token)
 def wit_response(message_text):
 	resp = client.message(message_text)
 	
-	entity = None
-	value = None
+	entity_list = []
 
 	try:
-		entity = list(resp['entities'])[0]
-		value = resp['entities'][entity][0]['value']
+		for entity in resp['entities']:
+		value = resp['entities'][entity][0]['value']['value']
+		entity_list.append((entity, value))
 	except:
 		pass
 		
-	return (entity, value)
+	return entity_list
