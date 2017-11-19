@@ -118,7 +118,7 @@ def webhook():
 									#time.sleep(60)
 								#flag_status = "Sent"
 						else:
-							response = 'bye'
+							response = intent
 								
 
 
