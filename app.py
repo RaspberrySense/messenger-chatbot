@@ -65,7 +65,7 @@ def webhook():
 					if 'text' in messaging_event['message']:
 						messaging_text = messaging_event['message']['text']
 						entity_list, intent = wit_response(messaging_text)
-
+						bot.send_text_message(sender_id, intent)
 						# selecting action to be done
 
 						if intent == "get_temp":							#T
@@ -123,8 +123,8 @@ def webhook():
 
 
 
-					if response != None:
-						bot.send_text_message(sender_id, response)
+				
+					bot.send_text_message(sender_id, response)
 
 					# TILL HERE>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
