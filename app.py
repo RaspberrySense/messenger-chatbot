@@ -15,17 +15,6 @@ greeting_list = ['hi','hey','hello','Hi','Hello','Hey']
 thank_list = ['Thanks','Thank you','Thank you very much','thanks','thank you','thank you very much']
 thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you",'😇','☺']
 
-############################### Working ##################
-
-def light_script():
-	light_value = random.randint(1,20)
-	return light_value
-
-def temp_script():
-	temp_value = random.randint(16,100)
-	return temp_value
-
-##########################################################
 
 @app.route('/', methods=['GET'])
 def verify():
