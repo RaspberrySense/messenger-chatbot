@@ -14,7 +14,7 @@ bot = Bot(PAGE_ACCESS_TOKEN)
 greeting_list = ['hi','hey','hello','Hi','Hello','Hey']
 thank_list = ['Thanks','Thank you','thank you']
 thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you",'😇','☺']
-talk_list = ["I'm good"," I'm fine","I'm ok","fine"]
+talk_list = ["I'm good"," I'm fine","I'm ok"]
 
 @app.route('/', methods=['GET'])
 def verify():
