@@ -12,9 +12,9 @@ PAGE_ACCESS_TOKEN = "EAAa4SLDVfmYBAMWZAK6RkTRrE52AsWOI6lZCl50QVfOltUv7OuFvZBb9py
 bot = Bot(PAGE_ACCESS_TOKEN)
 
 greeting_list = ['hi','hey','hello','Hi','Hello','Hey']
-thank_list = ['Thanks','Thank you','Thank you very much','thanks','thank you','thank you very much']
+thank_list = ['Thanks','Thank you','thank you']
 thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you",'😇','☺']
-
+talk_list = ["I'm good"," I'm fine","I'm ok","fine"]
 
 @app.route('/', methods=['GET'])
 def verify():
@@ -76,6 +76,8 @@ def webhook():
 										response = random.choice(thank_ret_list)
 									elif intent == "return_thank":
 										response = random.choice(thank_list)
+									elif intent = "get_talk":
+										response = random.choice(talk_list)
 									else:
 										response = "???"
 								bot.send_text_message(sender_id, response)
