@@ -76,7 +76,7 @@ def webhook():
 										response = random.choice(thank_ret_list)
 									elif intent == "return_thank":
 										response = random.choice(thank_list)
-									elif intent = "get_talk":
+									elif intent == "get_talk":
 										response = random.choice(talk_list)
 									else:
 										response = "???"
