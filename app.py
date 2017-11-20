@@ -92,7 +92,7 @@ def webhook():
 								bot.send_text_message(sender_id, response)
 
 						else:
-							response = "???"
+							response = "Sorry! I didn't understand"
 							bot.send_text_message(sender_id, response)
 
 
