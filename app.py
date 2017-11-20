@@ -91,10 +91,10 @@ def webhook():
 										response = "???"
 								bot.send_text_message(sender_id, response)
 
-							else:
-								response = "???"
-								bot.send_text_message(sender_id, response)
-							
+						else:
+							response = "???"
+							bot.send_text_message(sender_id, response)
+
 
 	return "ok", 200
 
