@@ -32,7 +32,7 @@ def verify():
         return 'Verification token mismatch', 403
     return 'Nothing to do', 200
 
-
+response = None
 @app.route('/', methods=['POST'])
 def webhook():
     data = request.get_json()
