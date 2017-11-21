@@ -57,7 +57,7 @@ def webhook():
                                         #value = value_list[0]['value']
 
                             if intent == "get_temp":                            
-                                response = get_temperature()                    
+                                response = '{:.1f} °C'.format(get_temperature())                   
                             elif intent == "check_temp_low":                                
                                 if is_cold():
                                     response = "Yes"
@@ -69,7 +69,7 @@ def webhook():
                                 elif is_warm():
                                     response = "Temperature is not high, it's normal"
                             elif intent == "get_humidity":
-                                response = get_humidity()
+                                response = '{:.1%}'.format(get_humidity())
                             elif intent == "check_humidity_low":
                                 if is_dry():
                                     response = "Yes"
