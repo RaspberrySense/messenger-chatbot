@@ -32,7 +32,6 @@ def verify():
         return 'Verification token mismatch', 403
     return 'Nothing to do', 200
 
-response = None
 @app.route('/', methods=['POST'])
 def webhook():
     data = request.get_json()
@@ -76,6 +75,8 @@ def webhook():
                                         response = "Yes, it's below {}°C".format(num)
                                     else:
                                         response = "No, it's not below {}°C".format(num)
+                                else:
+                                    response = "below what?"
                             elif intent == "check_temp_value_above":
                                 if number_data:
                                     num = number_data[0]['value']
@@ -83,6 +84,8 @@ def webhook():
                                         response = "Yes, it's above {}°C".format(num)
                                     else:
                                         response = "No, it's not above {}°C".format(num)
+                                else:
+                                    response = "above what?"
                             elif intent == "get_humidity":
                                 response = '{:.1%}'.format(get_humidity())
                             elif intent == "check_humidity_low":
@@ -102,6 +105,8 @@ def webhook():
                                         response = "Yes, it's below {}%".format(num)
                                     else:
                                         response = "No, it's not below {}%".format(num)
+                                else:
+                                    response = "below what?"
                             elif intent == "check_humidity_value_above":
                                 if number_data:
                                     num = number_data[0]['value']
@@ -109,6 +114,8 @@ def webhook():
                                         response = "Yes, it's above {}%".format(num)
                                     else:
                                         response = "No, it's not above {}%".format(num)
+                                else:
+                                    response = "above what?"
                             elif intent == "check_light_on_or_off":
                                 if is_light_on():
                                     response = "Light is on"
