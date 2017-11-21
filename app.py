@@ -19,30 +19,30 @@ talk_list = ["I'm good"," I'm fine","I'm ok"]
 
 @app.route('/', methods=['GET'])
 def verify():
-	#Webhook verification
-	mode = request.args.get('hub.mode')
-	token = request.args.get('hub.verify_token')
-	challenge = request.args.get('hub.challenge')
-	if mode and token:
-		if mode == 'subscribe' and token == secrets.FACEBOOK_VERIFY_TOKEN:
-			log('webhook verified')
-			return challenge, 200
-		log('Verification token mismatch')
-		return 'Verification token mismatch', 403
-	return 'Nothing to do', 200
+    #Webhook verification
+    mode = request.args.get('hub.mode')
+    token = request.args.get('hub.verify_token')
+    challenge = request.args.get('hub.challenge')
+    if mode and token:
+        if mode == 'subscribe' and token == secrets.FACEBOOK_VERIFY_TOKEN:
+            log('webhook verified')
+            return challenge, 200
+        log('Verification token mismatch')
+        return 'Verification token mismatch', 403
+    return 'Nothing to do', 200
 
 
 @app.route('/', methods=['POST'])
 def webhook():
-	data = request.get_json()
-	log(data)
+    data = request.get_json()
+    log(data)
 
-	if data['object'] == 'page':
-		for entry in data['entry']:
-			for messaging_event in entry['messaging']:
+    if data['object'] == 'page':
+        for entry in data['entry']:
+            for messaging_event in entry['messaging']:
 
-				# IDs
-				sender_id = messaging_event['sender']['id']
+                # IDs
+                sender_id = messaging_event['sender']['id']
                 SENDER_ID = sender_id
                 recipient_id = messaging_event['recipient']['id']
 
@@ -51,71 +51,71 @@ def webhook():
                     intent_data = nlp_data['entities'].get('intent')
                     if intent_data:
                         intent = intent_data[0]['value']
-									#entity, value_list = messaging_event['message']['nlp']['entities'].items()
-									#value = value_list[0]['value']
+                                    #entity, value_list = messaging_event['message']['nlp']['entities'].items()
+                                    #value = value_list[0]['value']
 
-						if intent == "get_temp":							
-							response = get_temperature()					
-						elif intent == "check_temp_low":								
-							if is_cold():
-								response = "Yes"
-							elif is_warm():
-								response = "Temperature is not low, it's normal"
-						elif intent == "check_temp_high":					
-							if is_hot():
-								response = "Yes"
-							elif is_warm():
-								response = "Temperature is not high, it's normal"
-						elif intent == "get_humidity":
-							response = get_humidity()
-						elif intent == "check_humidity_low":
-							if is_dry():
-								response = "Yes"
-							elif is_pleasant():
-								response = "Humidity is not low, it's normal"
-						elif intent == "check_humidity_high":
-							if is_humid():
-								response = "Yes"
-							elif is_pleasant():
-								response = "Humidity is not high, it's normal"
-						elif intent == "check_light_on_or_off":
-							if is_light_on():
-								response = "Light is on"
-							else:
-								response = "Light is off"
-						elif intent == "check_light_off":
-							if is_light_on() == False:
-								response = "Yes"
-							else:
-								response = "No"
-						elif intent == "check_light_on":
-							if is_light_on():
-								response = "Yes"
-							else:
-								response = "No"
-						elif intent == "get_image":
-							response = capture_image()
-						elif intent == "get_greeting":
-							response = random.choice(greeting_list)
-						elif intent == "get_thank":
-							response = random.choice(thank_ret_list)
-						elif intent == "return_thank":
-							response = random.choice(thank_list)
-						elif intent == "get_talk":
-							response = random.choice(talk_list)
-						else:
-							response = "???"
-						bot.send_text_message(sender_id, response)
+                        if intent == "get_temp":                            
+                            response = get_temperature()                    
+                        elif intent == "check_temp_low":                                
+                            if is_cold():
+                                response = "Yes"
+                            elif is_warm():
+                                response = "Temperature is not low, it's normal"
+                        elif intent == "check_temp_high":                   
+                            if is_hot():
+                                response = "Yes"
+                            elif is_warm():
+                                response = "Temperature is not high, it's normal"
+                        elif intent == "get_humidity":
+                            response = get_humidity()
+                        elif intent == "check_humidity_low":
+                            if is_dry():
+                                response = "Yes"
+                            elif is_pleasant():
+                                response = "Humidity is not low, it's normal"
+                        elif intent == "check_humidity_high":
+                            if is_humid():
+                                response = "Yes"
+                            elif is_pleasant():
+                                response = "Humidity is not high, it's normal"
+                        elif intent == "check_light_on_or_off":
+                            if is_light_on():
+                                response = "Light is on"
+                            else:
+                                response = "Light is off"
+                        elif intent == "check_light_off":
+                            if is_light_on() == False:
+                                response = "Yes"
+                            else:
+                                response = "No"
+                        elif intent == "check_light_on":
+                            if is_light_on():
+                                response = "Yes"
+                            else:
+                                response = "No"
+                        elif intent == "get_image":
+                            response = capture_image()
+                        elif intent == "get_greeting":
+                            response = random.choice(greeting_list)
+                        elif intent == "get_thank":
+                            response = random.choice(thank_ret_list)
+                        elif intent == "return_thank":
+                            response = random.choice(thank_list)
+                        elif intent == "get_talk":
+                            response = random.choice(talk_list)
+                        else:
+                            response = "???"
+                        bot.send_text_message(sender_id, response)
 
 
 
-	return "ok", 200
+    return "ok", 200
 
 
 def log(message):
-	print(message)
-	sys.stdout.flush()
+    print(message)
+    sys.stdout.flush()
 
 
 if __name__ == "__main__":
-	app.run(debug = True, port = 80)
+    app.run(debug = True, port = 80)
