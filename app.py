@@ -51,7 +51,7 @@ def webhook():
                     if nlp_data:
                         intent_data = nlp_data['entities'].get('intent')
                         number_data = nlp_data['entities'].get('wit/number')
-                        bot.send_text_message(sender_id, number_data)
+                        bot.send_text_message(sender_id, str(number_data))
                         if intent_data:
                             intent = intent_data[0]['value']
                                         #entity, value_list = messaging_event['message']['nlp']['entities'].items()
