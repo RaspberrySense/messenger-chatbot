@@ -136,7 +136,9 @@ def webhook():
                                 response = random.choice(talk_list)
                             else:
                                 response = "???"
-                            bot.send_text_message(sender_id, response)
+                            
+                            if response:
+                                bot.send_text_message(sender_id, response)
 
 
 
