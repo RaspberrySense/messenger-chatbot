@@ -5,8 +5,8 @@ from flask import Flask, request
 from pymessenger import Bot
 import secrets
 from sensors.camera import capture_image
-from sensors.temperature import is_cold, is_hot, is_warm
-from sensors.humidity import is_dry, is_humid, is_pleasant
+from sensors.temperature import is_cold, is_hot, is_warm, get_temperature
+from sensors.humidity import is_dry, is_humid, is_pleasant, get_humidity
 from sensors.light import is_light_on
 
 app = Flask(__name__)
