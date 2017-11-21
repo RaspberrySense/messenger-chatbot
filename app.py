@@ -102,7 +102,6 @@ def webhook():
                             elif intent == "check_humidity_value_below":
                                 if number_data:
                                     num = number_data[0]['value']
-                                    #n = num/100
                                     if get_humidity() < (num/100):
                                         response = "Yes, it's below {}%".format(num)
                                     else:
@@ -112,7 +111,6 @@ def webhook():
                             elif intent == "check_humidity_value_above":
                                 if number_data:
                                     num = number_data[0]['value']
-                                    #n = num/100
                                     if get_humidity() > (num/100):
                                         response = "Yes, it's above {}%".format(num)
                                     else:
