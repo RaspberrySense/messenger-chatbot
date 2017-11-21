@@ -4,26 +4,33 @@ import time
 from flask import Flask, request
 from utils import wit_response
 from pymessenger import Bot
+from sensors.camera import capture_image
+from sensors.temperature import is_cold, is_hot, is_warm
+from sensors.humidity import is_dry, is_humid, is_pleasant
+from sensors.light import is_light_on
 
 app = Flask(__name__)
 
-PAGE_ACCESS_TOKEN = "EAAa4SLDVfmYBAMWZAK6RkTRrE52AsWOI6lZCl50QVfOltUv7OuFvZBb9pyH5ltojwjlFUvEDN69IpAX9nsZA7c9mgE8ZAz6Ho7lIDcdkbkGEtZA8hGWZBqbytrXUbrPrTYEZCBuqssKDuZBwJIhY3OhrwXrJv2145T8wTohN3OpjE9Kn6p4mZAYEjyscxBkiyCRfEZD"
-
-bot = Bot(PAGE_ACCESS_TOKEN)
+bot = Bot(secrets.PAGE_ACCESS_TOKEN)
 
 greeting_list = ['hi','hey','hello','Hi','Hello','Hey']
 thank_list = ['Thanks','Thank you','thank you']
-thank_ret_list = ['No problem',"It's my job",'I am happy to help you', "It's my pleasure to serve you",'😇','☺']
+thank_ret_list = ['No problem ☺',"It's my job",'I am happy to help you', "It's my pleasure to serve you",'😇','☺']
 talk_list = ["I'm good"," I'm fine","I'm ok"]
 
 @app.route('/', methods=['GET'])
 def verify():
 	#Webhook verification
-	if request.args.get("hub.mode") == "subscribe" and request.args.get("hub.challenge"):
-		if not request.args.get("hub.verify_token") == "hello":
-			return "Verification token mismatch", 403
-		return request.args["hub.challenge"], 200
-	return "Hello world", 200
+	mode = request.args.get('hub.mode')
+	token = request.args.get('hub.verify_token')
+	challenge = request.args.get('hub.challenge')
+	if mode and token:
+		if mode == 'subscribe' and token == secrets.FACEBOOK_VERIFY_TOKEN:
+			log('webhook verified')
+			return challenge, 200
+		log('Verification token mismatch')
+		return 'Verification token mismatch', 403
+	return 'Nothing to do', 200
 
 
 @app.route('/', methods=['POST'])
@@ -49,27 +56,47 @@ def webhook():
 									#entity, value_list = messaging_event['message']['nlp']['entities'].items()
 									#value = value_list[0]['value']
 
-									if intent == "get_temp":							#T
-										temp_value = 'temp_script()'
-										response = 'temp_value'							#E
-									elif intent == "check_temp_low":								#M
-										response = 'check_temp_low()'
-									elif intent == "check_temp_high":					#E
-										response = 'check_temp_high()'
+									if intent == "get_temp":							
+										response = get_temperature()					
+									elif intent == "check_temp_low":								
+										if is_cold():
+											response = "Yes"
+										elif is_warm():
+											response = "Temperature is not low, it's normal"
+									elif intent == "check_temp_high":					
+										if is_hot():
+											response = "Yes"
+										elif is_warm():
+											response = "Temperature is not high, it's normal"
 									elif intent == "get_humidity":
-										response = 'humidity_script()'
+										response = get_humidity()
 									elif intent == "check_humidity_low":
-										response = 'check_humidity_low()'
+										if is_dry():
+											response = "Yes"
+										elif is_pleasant():
+											response = "Humidity is not low, it's normal"
 									elif intent == "check_humidity_high":
-										response = 'check_humidity_high()'
+										if is_humid():
+											response = "Yes"
+										elif is_pleasant():
+											response = "Humidity is not high, it's normal"
 									elif intent == "check_light_on_or_off":
-										response = "lights on"
+										if is_light_on():
+											response = "Light is on"
+										else:
+											response = "Light is off"
 									elif intent == "check_light_off":
-										response = 'check_light_off()'
+										if is_light_on() == False:
+											response = "Yes"
+										else:
+											response = "No"
 									elif intent == "check_light_on":
-										response = 'check_light_on()'
+										if is_light_on():
+											response = "Yes"
+										else:
+											response = "No"
 									elif intent == "get_image":
-										response = 'get_image()'
+										response = capture_image()
 									elif intent == "get_greeting":
 										response = random.choice(greeting_list)
 									elif intent == "get_thank":
