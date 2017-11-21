@@ -102,4 +102,4 @@ myenv/
 .mypy_cache/
 
 # Secret keys and tokens
-secrets.py
+# secrets.py
