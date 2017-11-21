@@ -51,13 +51,14 @@ def webhook():
                     nlp_data = message.get('nlp')
                     if nlp_data:
                         intent_data = nlp_data['entities'].get('intent')
+                        number_data = nlp_data['entities'].get('wit/number')
                         if intent_data:
                             intent = intent_data[0]['value']
                                         #entity, value_list = messaging_event['message']['nlp']['entities'].items()
                                         #value = value_list[0]['value']
 
                             if intent == "get_temp":                            
-                                response = '{:.1f} °C'.format(get_temperature())                   
+                                response = '{:.2f}°C'.format(get_temperature())                   
                             elif intent == "check_temp_low":                                
                                 if is_cold():
                                     response = "Yes"
@@ -68,6 +69,20 @@ def webhook():
                                     response = "Yes"
                                 elif is_warm():
                                     response = "Temperature is not high, it's normal"
+                            elif intent == "check_temp_value_below":
+                                if number_data:
+                                    num = number_data[0]['value']
+                                    if get_temperature() < num:
+                                        response = "Yes, it's below {}°C".format(num)
+                                    else:
+                                        response = "No, it's not below {}°C".format(num)
+                            elif intent == "check_temp_value_above":
+                                if number_data:
+                                    num = number_data[0]['value']
+                                    if get_temperature() > num:
+                                        response = "Yes, it's above {}°C".format(num)
+                                    else:
+                                        response = "No, it's not above {}°C".format(num)
                             elif intent == "get_humidity":
                                 response = '{:.1%}'.format(get_humidity())
                             elif intent == "check_humidity_low":
@@ -80,6 +95,20 @@ def webhook():
                                     response = "Yes"
                                 elif is_pleasant():
                                     response = "Humidity is not high, it's normal"
+                            elif intent == "check_humidity_value_below":
+                                if number_data:
+                                    num = number_data[0]['value']
+                                    if get_humidity() < num:
+                                        response = "Yes, it's below {}%".format(num)
+                                    else:
+                                        response = "No, it's not below {}%".format(num)
+                            elif intent == "check_humidity_value_above":
+                                if number_data:
+                                    num = number_data[0]['value']
+                                    if get_humidity() > num:
+                                        response = "Yes, it's above {}%".format(num)
+                                    else:
+                                        response = "No, it's not above {}%".format(num)
                             elif intent == "check_light_on_or_off":
                                 if is_light_on():
                                     response = "Light is on"
