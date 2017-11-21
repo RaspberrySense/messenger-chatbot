@@ -16,7 +16,7 @@ def is_hot():
 
 
 def is_cold():
-    temp = get_temperature()
+    temperature = get_temperature()
     if temperature <= COLD_UPPER_LIMIT:
         return True
     return False
