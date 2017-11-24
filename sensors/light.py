@@ -1,14 +1,9 @@
-import random
-
-BRIGHTNESS_THRESHOLD = 0.8      # min = 0, max = 1
+from gpiozero import LightSensor
 
 
-def get_light_intensity():
-    return random.uniform(0, 1)
+LIGHT_THRESHOLD = 0.9		# min = 0, max = 1
+ldr = LightSensor(4, LIGHT_THRESHOLD)
 
 
 def is_light_on():
-    light_intensity = get_light_intensity()
-    if light_intensity >= BRIGHTNESS_THRESHOLD:
-        return True
-    return False
+    return ldr.light_detected()
