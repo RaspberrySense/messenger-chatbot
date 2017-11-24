@@ -1,29 +1,34 @@
-import random
+from time import sleep
 
-HOT_LOWER_LIMIT = 35      # Celsius
-COLD_UPPER_LIMIT = 20     # Celsius
+import pigpio
+import DHT22
+
+
+pi = pigpio.pi()
+dht22 = DHT22.sensor(pi, 27)
+
+HOT_LOWER_LIMIT = 35    # Celsius
+COLD_UPPER_LIMIT = 25   # Celsius
+
+
+def init_sensor():
+    dht22.trigger()
+    sleep(0.5)
 
 
 def get_temperature():
-    return random.uniform(5, 40)
+    dht22.trigger()
+
+    return dht22.temperature()
 
 
 def is_hot():
-    temperature = get_temperature()
-    if temperature >= HOT_LOWER_LIMIT:
-        return True
-    return False
+    return get_temperature() >= HOT_LOWER_LIMIT
 
 
 def is_cold():
-    temp = get_temperature()
-    if temperature <= COLD_UPPER_LIMIT:
-        return True
-    return False
+    return get_temperature() <= COLD_UPPER_LIMIT
 
 
 def is_warm():
-    temperature = get_temperature()
-    if COLD_UPPER_LIMIT < temperature < HOT_LOWER_LIMIT:
-        return True
-    return False
+    return COLD_UPPER_LIMIT < get_temperature() < HOT_LOWER_LIMIT

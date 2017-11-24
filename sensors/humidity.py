@@ -1,29 +1,34 @@
-import random
+from time import sleep
 
-HUMID_LOWER_LIMIT = 0.8     # min = 0, max = 1
-DRY_UPPER_LIMIT = 0.2       # min = 0, max = 1
+import pigpio
+import DHT22
+
+
+pi = pigpio.pi()
+dht22 = DHT22.sensor(pi, 27)
+
+HUMID_LOWER_LIMIT = 75  # percent
+DRY_UPPER_LIMIT = 25    # percent
+
+
+def init_sensor():
+    dht22.trigger()
+    sleep(0.5)
 
 
 def get_humidity():
-    return random.uniform(0, 1)
+    dht22.trigger()
+
+    return dht22.humidity()
 
 
 def is_humid():
-    humidity = get_humidity()
-    if humidity >= HUMID_LOWER_LIMIT:
-        return True
-    return False
+    return get_humidity() >= HUMID_LOWER_LIMIT
 
 
 def is_dry():
-    humidity = get_humidity()
-    if humidity <= DRY_UPPER_LIMIT:
-        return True
-    return False
+    return get_humidity() <= DRY_UPPER_LIMIT
 
 
 def is_pleasant():
-    humidity = get_humidity()
-    if DRY_UPPER_LIMIT < humidity < HUMID_LOWER_LIMIT:
-        return True
-    return False
+    return DRY_UPPER_LIMIT < get_humidity() < HUMID_LOWER_LIMIT
