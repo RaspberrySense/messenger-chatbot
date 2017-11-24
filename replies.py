@@ -87,22 +87,24 @@ def get_no():
 
 sensor_replies = {
     'temperature': {
-        'get_temp': [
-            "It is {value}°C in here",
-            "It's {value}°C",
-            "The temperature is {value}°C in here",
-            "The temperature is {value}°C",
-            "{value}°C",
-        ],
+        'get_temp': {
+            'none': [
+                "It is {value}°C in here",
+                "It's {value}°C",
+                "The temperature is {value}°C in here",
+                "The temperature is {value}°C",
+                "{value}°C",
+            ]
+        },
         'check_temp_high': {
-            'true': [
+            'yes': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's quite hot",
                 "{yes}, it's hot in here",
                 "{yes}, it's quite hot in here",
             ],
-            'false': [
+            'no': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's rather quite cold",
@@ -117,14 +119,14 @@ sensor_replies = {
             ]
         },
         'check_temp_low': {
-            'true': [
+            'yes': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's quite cold",
                 "{yes}, it's cold in here",
                 "{yes}, it's quite cold in here",
             ],
-            'false': [
+            'no': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's rather quite hot",
@@ -139,13 +141,13 @@ sensor_replies = {
             ]
         },
         'check_temp_value_above': {
-            'true': [
+            'yes': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's above {value}°C",
                 "{yes}, it's above {value}°C in here",
             ],
-            'false': [
+            'no': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's below {value}°C",
@@ -153,13 +155,13 @@ sensor_replies = {
             ]
         },
         'check_temp_value_below': {
-            'true': [
+            'yes': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's below {value}°C",
                 "{yes}, it's below {value}°C in here",
             ],
-            'false': [
+            'no': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's above {value}°C",
@@ -170,22 +172,24 @@ sensor_replies = {
 
     # Humidity ----------------------------------------------------------------
     'humidity': {
-        'get_humidity': [
-            "It is {value}%% in here",
-            "It's {value}%%",
-            "The humidity is {value}%% in here",
-            "The humidity is {value}%%",
-            "{value}%%",
-        ],
+        'get_humidity': {
+            'default': [
+                "It is {value}%% in here",
+                "It's {value}%%",
+                "The humidity is {value}%% in here",
+                "The humidity is {value}%%",
+                "{value}%%",
+            ]
+        },
         'check_humidity_high': {
-            'true': [
+            'yes': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's quite humid",
                 "{yes}, it's humid in here",
                 "{yes}, it's quite humid in here",
             ],
-            'false': [
+            'no': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's rather quite dry",
@@ -200,14 +204,14 @@ sensor_replies = {
             ]
         },
         'check_humidity_low': {
-            'true': [
+            'yes': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's quite dry",
                 "{yes}, it's dry in here",
                 "{yes}, it's quite dry in here",
             ],
-            'false': [
+            'no': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's rather quite humid",
@@ -222,13 +226,13 @@ sensor_replies = {
             ]
         },
         'check_humidity_value_above': {
-            'true': [
+            'yes': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's above {value}%%",
                 "{yes}, it's above {value}%% in here",
             ],
-            'false': [
+            'no': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's below {value}%%",
@@ -236,13 +240,13 @@ sensor_replies = {
             ]
         },
         'check_humidity_value_below': {
-            'true': [
+            'yes': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's below {value}%%",
                 "{yes}, it's below {value}%% in here",
             ],
-            'false': [
+            'no': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's above {value}%%",
@@ -255,8 +259,8 @@ sensor_replies = {
 }
 
 
-def get_sensor_reply(sensor_type, intent, condition, value=''):
-    reply = choice(sensor_replies[sensor_type][intent][condition])
+def get_sensor_reply(sensor_type, intent, result='default', value=None):
+    reply = choice(sensor_replies[sensor_type][intent][result])
 
     if '{yes}' in reply:
         if '{value}' in reply:
