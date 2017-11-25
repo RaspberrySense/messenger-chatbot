@@ -1,14 +1,17 @@
+Flask==0.12.2
+Jinja2==2.9.6
+MarkupSafe==1.0
+RPi.GPIO==0.6.3
+Werkzeug==0.12.2
 certifi==2017.7.27.1
 chardet==3.0.4
 click==6.7
-Flask==0.12.2
 gpiozero==1.4.0
 gunicorn==19.7.1
 idna==2.6
 itsdangerous==0.24
-Jinja2==2.9.6
-MarkupSafe==1.0
-numpy==1.13.3
+picamera==1.13
+pigpio==1.38
 prompt-toolkit==1.0.15
 pymessenger==0.0.7.0
 requests==2.18.4
@@ -16,5 +19,4 @@ requests-toolbelt==0.8.0
 six==1.11.0
 urllib3==1.22
 wcwidth==0.1.7
-Werkzeug==0.12.2
 wit==4.3.0
