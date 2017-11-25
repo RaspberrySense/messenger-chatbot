@@ -1,15 +1,19 @@
 import os
 import random
 import sys
-import time
+from time import sleep
 
 from flask import Flask, request
-from pymessenger import Bot
+from gpiozero import LED
+from pymessenger2.bot import Bot
 
-from sensors import camera, humidity, light, temperature, motion
-from replies import get_sensor_reply
+from sensors import camera, humidity, light, temperature
+import replies
 import secrets
 
+
+green = LED(9)
+green.on()
 
 # Globals ---------------------------------------------------------------------
 app = Flask(__name__)
@@ -56,23 +60,21 @@ def webhook():
     log(data)
 
     if data['object'] == 'page':
-        for entry in data['entry']:
-            for messaging_event in entry['messaging']:
-                sender_id = messaging_event['sender']['id']
-                recipient_id = messaging_event['recipient']['id']
+        messaging_event = data['entry'][0]['messaging'][0]
+        sender_id = messaging_event['sender']['id']
 
-                message_data = messaging_event.get('message')
-                if message_data:
-                    nlp_data = message_data.get('nlp')
-                    if nlp_data:
-                        intent_data = nlp_data['entities'].get('intent')
-                        number_data = nlp_data['entities'].get('number')
-                        if intent_data:
-                            intent = intent_data[0]['value']
-                            value = None
-                            if number_data:
-                                value = number_data[0]['value']
-                            send_response(sender_id, intent, value)
+        message_data = messaging_event.get('message')
+        if message_data:
+            nlp_data = message_data.get('nlp')
+            if nlp_data:
+                intent_data = nlp_data['entities'].get('intent')
+                number_data = nlp_data['entities'].get('number')
+                if intent_data:
+                    intent = intent_data[0]['value']
+                    value = None
+                    if number_data:
+                        value = number_data[0]['value']
+                    send_response(sender_id, intent, value)
 
     return 'OK', 200
 
@@ -81,26 +83,26 @@ def webhook():
 def send_response(sender_id, intent, value):
     # Temperature:
     if intent == 'get_temp':
-        temp = temperature.get_temperature()
-        response = get_sensor_reply('temperature', intent, value=temp)
+        temp = '{:.1f}'.format(temperature.get_temperature())
+        response = replies.get_sensor_reply('temperature', intent, value=temp)
 
     elif intent == 'check_temp_low':
         if temperature.is_cold():
-            result = 'yes'
+            result = 'cold'
         elif temperature.is_hot():
-            result = 'no'
+            result = 'hot'
         else:
-            result = 'other'
-        response = get_sensor_reply('temperature', intent, result)
+            result = 'warm'
+        response = replies.get_sensor_reply('temperature', intent, result)
 
     elif intent == 'check_temp_high':
         if temperature.is_hot():
-            result = 'yes'
+            result = 'hot'
         elif temperature.is_cold():
-            result = 'no'
+            result = 'cold'
         else:
-            result = 'other'
-        response = get_sensor_reply('temperature', intent, result)
+            result = 'warm'
+        response = replies.get_sensor_reply('temperature', intent, result)
 
     elif intent == 'check_temp_value_below':
         if value:
@@ -108,7 +110,8 @@ def send_response(sender_id, intent, value):
                 result = 'yes'
             else:
                 result = 'no'
-            response = get_sensor_reply('temperature', intent, result, value)
+            response = replies.get_sensor_reply('temperature', intent, result,
+                                                value)
         else:
             response = 'Can you phrase that more clearly, please'
 
@@ -118,32 +121,33 @@ def send_response(sender_id, intent, value):
                 result = 'yes'
             else:
                 result = 'no'
-            response = get_sensor_reply('temperature', intent, result, value)
+            response = replies.get_sensor_reply('temperature', intent, result,
+                                                value)
         else:
             response = 'Can you phrase that more clearly, please'
 
     # Humidity:
     elif intent == 'get_humidity':
-        humidity = humidity.get_humidity()
-        response = get_sensor_reply('humidity', intent, value=humidity)
+        hum = '{:.1f}'.format(humidity.get_humidity())
+        response = replies.get_sensor_reply('humidity', intent, value=hum)
 
     elif intent == 'check_humidity_low':
         if humidity.is_dry():
-            result = 'yes'
+            result = 'dry'
         elif humidity.is_humid():
-            result = 'no'
+            result = 'humid'
         else:
-            result = 'other'
-        response = get_sensor_reply('humidity', intent, result)
+            result = 'pleasant'
+        response = replies.get_sensor_reply('humidity', intent, result)
 
     elif intent == 'check_humidity_high':
         if humidity.is_humid():
-            result = 'yes'
+            result = 'humid'
         elif humidity.is_dry():
-            result = 'no'
+            result = 'dry'
         else:
-            result = 'other'
-        response = get_sensor_reply('humidity', intent, result)
+            result = 'pleasant'
+        response = replies.get_sensor_reply('humidity', intent, result)
 
     elif intent == 'check_humidity_value_below':
         if value:
@@ -151,9 +155,10 @@ def send_response(sender_id, intent, value):
                 result = 'yes'
             else:
                 result = 'no'
-            response = get_sensor_reply('humidity', intent, result, value)
+            response = replies.get_sensor_reply('humidity', intent, result,
+                                                value)
         else:
-            response = 'Can you phrase that more clearly, please'
+            response = replies.get_did_not_understand_reply()
 
     elif intent == 'check_humidity_value_above':
         if value:
@@ -161,54 +166,76 @@ def send_response(sender_id, intent, value):
                 result = 'yes'
             else:
                 result = 'no'
-            response = get_sensor_reply('humidity', intent, result, value)
+            response = replies.get_sensor_reply('humidity', intent, result,
+                                                value)
         else:
-            response = 'Can you phrase that more clearly, please'
+            response = replies.get_did_not_understand_reply()
 
-    # TODO: Light:
+    # Light:
     elif intent == 'check_light_on_or_off':
         if light.is_light_on():
-            response = 'Light is on'
+            result = 'on'
         else:
-            response = 'Light is off'
+            result = 'off'
+        response = replies.get_sensor_reply('light', intent, result)
 
     elif intent == 'check_light_off':
         if not light.is_light_on():
-            response = 'Yes'
+            result = 'yes'
         else:
-            response = 'No'
+            result = 'no'
+        response = replies.get_sensor_reply('light', intent, result)
 
     elif intent == 'check_light_on':
         if light.is_light_on():
-            response = 'Yes'
+            result = 'yes'
         else:
-            response = 'No'
+            result = 'no'
+        response = replies.get_sensor_reply('light', intent, result)
 
     # Camera:
     elif intent == 'get_image':
-        response = capture_image()
+        response = replies.get_sensor_reply('camera', 'any', 'hold_on')
+        bot.send_text_message(sender_id, response)
+        response = None
+        # making a gap between "hold_on" response and send image
+        sleep(1)
+        image_path = camera.capture_image()
+        log(image_path)
+        bot.send_image(sender_id, image_path)
 
-    # Motion:
+    elif intent == 'get_images':
+        response = replies.get_sensor_reply('camera', 'any', 'hold_on')
+        bot.send_text_message(sender_id, response)
+        response = None
+        num_images = value if value else 3
+        for i in range(num_images):
+            sleep(1)
+            image_path = camera.capture_image()
+            bot.send_image(sender_id, image_path)
+
+    elif intent == 'get_video':
+        response = replies.get_sensor_reply('camera', 'any', 'hold_on')
+        bot.send_text_message(sender_id, response)
+        response = None
+        video_path = camera.capture_video()
+        bot.send_video(sender_id, video_path)
 
     # Other:
     elif intent == 'get_greeting':
-        response = random.choice(greeting_list)
+        response = replies.get_hello()
+
+    elif intent == 'get_thank_reply':
+        response = replies.get_thank_reply()
 
     elif intent == 'get_thank':
-        response = random.choice(thank_ret_list)
-
-    elif intent == 'return_thank':
-        response = random.choice(thank_list)
+        response = replies.get_thank()
 
     elif intent == 'get_talk':
-        response = random.choice(talk_list)
+        response = replies.get_fine_reply()
 
     else:
-        response = "Sorry, I don't understand"
+        response = replies.get_did_not_understand_reply()
 
-    bot.send_text_message(sender_id, response)
-
-
-# -----------------------------------------------------------------------------
-if __name__ == '__main__':
-    app.run(debug=True, port=80)
+    if response:
+        bot.send_text_message(sender_id, response)
