@@ -2,7 +2,7 @@ from random import choice, randint
 
 
 def randomly_capitalize(text):
-    if randint(0, 1):   # randomly decide whether to capitalize
+    if randint(0, 2):   # randomly decide whether to capitalize
         return text.capitalize()
     return text
 
@@ -18,25 +18,25 @@ def random_exclamation(can_be_empty=True):
 
 
 hello = [
-    'hello'
-    'hey there'
+    'hello',
+    'hey there',
     'hey',
     'hi',
 ]
 
 
 def get_hello():
-    randomly_capitalize(choice(hello))
+    return randomly_capitalize(choice(hello))
 
 
 thanks = [
-    'thank you'
+    'thank you',
     'thanks',
 ]
 
 
 def get_thank():
-    return randomly_capitalize(choice(thanks)) + random_smiley()
+    return randomly_capitalize(choice(thanks)) + ' ' + random_smiley()
 
 
 thank_replies = [
@@ -61,6 +61,21 @@ fine_replies = [
 
 def get_fine_reply():
     return randomly_capitalize(choice(fine_replies)) + random_exclamation()
+
+
+did_not_understand = [
+    "i didn't get that",
+    "i don't get what you're saying :/",
+    "i don't understand :/",
+    "sorry I don't understand",
+    "sorry, I don't get what you're saying",
+    'say what?',
+    'this does not mean anything to me',
+]
+
+
+def get_did_not_understand_reply():
+    return randomly_capitalize(choice(did_not_understand))
 
 
 yes = [
@@ -88,30 +103,30 @@ def get_no():
 sensor_replies = {
     'temperature': {
         'get_temp': {
-            'none': [
-                "It is {value}°C in here",
-                "It's {value}°C",
-                "The temperature is {value}°C in here",
-                "The temperature is {value}°C",
-                "{value}°C",
+            'default': [
+                "It is {value}° in here",
+                "It's {value}°",
+                "The temperature is {value}° in here",
+                "The temperature is {value}°",
+                "{value}°",
             ]
         },
         'check_temp_high': {
-            'yes': [
+            'hot': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's quite hot",
                 "{yes}, it's hot in here",
                 "{yes}, it's quite hot in here",
             ],
-            'no': [
+            'cold': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's rather quite cold",
                 "{no}, it's actually quite cold",
                 "{no}, it's actually quite cold in here",
             ],
-            'other': [
+            'warm': [
                 "{no}",
                 "{no}, it's warm",
                 "{no}, it's actually quite warm",
@@ -119,21 +134,21 @@ sensor_replies = {
             ]
         },
         'check_temp_low': {
-            'yes': [
+            'cold': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's quite cold",
                 "{yes}, it's cold in here",
                 "{yes}, it's quite cold in here",
             ],
-            'no': [
+            'hot': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's rather quite hot",
                 "{no}, it's actually quite hot",
                 "{no}, it's actually quite hot in here",
             ],
-            'other': [
+            'warm': [
                 "{no}",
                 "{no}, it's warm",
                 "{no}, it's actually quite warm",
@@ -144,28 +159,28 @@ sensor_replies = {
             'yes': [
                 "{yes}",
                 "{yes}, it is",
-                "{yes}, it's above {value}°C",
-                "{yes}, it's above {value}°C in here",
+                "{yes}, it's above {value}°",
+                "{yes}, it's above {value}° in here",
             ],
             'no': [
                 "{no}",
                 "{no}, it's not",
-                "{no}, it's below {value}°C",
-                "{no}, it's below {value}°C in here",
+                "{no}, it's below {value}°",
+                "{no}, it's below {value}° in here",
             ]
         },
         'check_temp_value_below': {
             'yes': [
                 "{yes}",
                 "{yes}, it is",
-                "{yes}, it's below {value}°C",
-                "{yes}, it's below {value}°C in here",
+                "{yes}, it's below {value}°",
+                "{yes}, it's below {value}° in here",
             ],
             'no': [
                 "{no}",
                 "{no}, it's not",
-                "{no}, it's above {value}°C",
-                "{no}, it's above {value}°C in here",
+                "{no}, it's above {value}°",
+                "{no}, it's above {value}° in here",
             ]
         },
     },
@@ -174,29 +189,29 @@ sensor_replies = {
     'humidity': {
         'get_humidity': {
             'default': [
-                "It is {value}%% in here",
-                "It's {value}%%",
-                "The humidity is {value}%% in here",
-                "The humidity is {value}%%",
-                "{value}%%",
+                "It is {value}% in here",
+                "It's {value}%",
+                "The humidity is {value}% in here",
+                "The humidity is {value}%",
+                "{value}%",
             ]
         },
         'check_humidity_high': {
-            'yes': [
+            'humid': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's quite humid",
                 "{yes}, it's humid in here",
                 "{yes}, it's quite humid in here",
             ],
-            'no': [
+            'dry': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's rather quite dry",
                 "{no}, it's actually quite dry",
                 "{no}, it's actually quite dry in here",
             ],
-            'other': [
+            'pleasant': [
                 "{no}",
                 "{no}, it's pleasant",
                 "{no}, it's actually quite pleasant",
@@ -204,21 +219,21 @@ sensor_replies = {
             ]
         },
         'check_humidity_low': {
-            'yes': [
+            'dry': [
                 "{yes}",
                 "{yes}, it is",
                 "{yes}, it's quite dry",
                 "{yes}, it's dry in here",
                 "{yes}, it's quite dry in here",
             ],
-            'no': [
+            'humid': [
                 "{no}",
                 "{no}, it's not",
                 "{no}, it's rather quite humid",
                 "{no}, it's actually quite humid",
                 "{no}, it's actually quite humid in here",
             ],
-            'other': [
+            'pleasant': [
                 "{no}",
                 "{no}, it's pleasant",
                 "{no}, it's actually quite pleasant",
@@ -229,33 +244,78 @@ sensor_replies = {
             'yes': [
                 "{yes}",
                 "{yes}, it is",
-                "{yes}, it's above {value}%%",
-                "{yes}, it's above {value}%% in here",
+                "{yes}, it's above {value}%",
+                "{yes}, it's above {value}% in here",
             ],
             'no': [
                 "{no}",
                 "{no}, it's not",
-                "{no}, it's below {value}%%",
-                "{no}, it's below {value}%% in here",
+                "{no}, it's below {value}%",
+                "{no}, it's below {value}% in here",
             ]
         },
         'check_humidity_value_below': {
             'yes': [
                 "{yes}",
                 "{yes}, it is",
-                "{yes}, it's below {value}%%",
-                "{yes}, it's below {value}%% in here",
+                "{yes}, it's below {value}%",
+                "{yes}, it's below {value}% in here",
             ],
             'no': [
                 "{no}",
                 "{no}, it's not",
-                "{no}, it's above {value}%%",
-                "{no}, it's above {value}%% in here",
+                "{no}, it's above {value}%",
+                "{no}, it's above {value}% in here",
             ]
         },
     },
 
-    # TODO: replies for other sensors
+    # Light ----------------------------------------------------------------
+    'light': {
+        'check_light_on_or_off': {
+            'on': [
+                'on',
+                'the lights are on'
+            ],
+            'off': [
+                'off',
+                'the lights are off'
+            ],
+        },
+        'check_light_off': {
+            'yes': [
+                '{yes}',
+                '{yes}, the lights are off'
+            ],
+            'no': [
+                '{no}',
+                '{no}, the lights are on',
+            ],
+        },
+        'check_light_on': {
+            'yes': [
+                '{yes}',
+                '{yes}, the lights are on',
+            ],
+            'no': [
+                '{no}',
+                '{no}, the lights are off',
+            ],
+        },
+    },
+
+    # Camera ----------------------------------------------------------------
+    'camera': {
+        'any': {
+            'hold_on': [
+                "capturing...",
+                "hold on, capturing...",
+                "hold on...",
+                "please wait...",
+                "wait...",
+            ],
+        },
+    },
 }
 
 
