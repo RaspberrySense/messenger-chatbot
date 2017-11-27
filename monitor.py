@@ -21,15 +21,18 @@ def send_alert(alert_text):
         pass
     if sender_id:
         app.bot.send_text_message(sender_id, alert_text)
-        t = Thread(target=app.send_video, args=(sender_id,))
-        t.start()
+
+    return sender_id
 
 
 # Motion sensor ---------------------------------------------------------------
 def alert_motion_detected():
     send_alert(get_sensor_reply('motion', 'movement'))
     app.log('Motion detected')
-    send_alert(get_sensor_reply('motion', 'capturing'))
+    sender_id = send_alert(get_sensor_reply('motion', 'capturing'))
+    if sender_id:
+        t = Thread(target=app.send_video, args=(sender_id,))
+        t.start()
 
 motion_sensor = MotionSensor(17)
 motion_sensor.when_motion = alert_motion_detected
