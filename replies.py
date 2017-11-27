@@ -42,7 +42,7 @@ def get_thank():
 thank_replies = [
     "you're welcome",
     'happy to help',
-    'my pleasure'
+    'my pleasure',
     'no problem',
     'no probs',
 ]
@@ -55,7 +55,7 @@ def get_thank_reply():
 fine_replies = [
     "i'm good",
     "i'm fine",
-    "i'm OK"
+    "i'm OK",
 ]
 
 
@@ -81,7 +81,7 @@ def get_did_not_understand_reply():
 yes = [
     'yes',
     'yeah',
-    'yep'
+    'yep',
 ]
 
 
@@ -92,7 +92,7 @@ def get_yes():
 no = [
     'no',
     'nah',
-    'nope'
+    'nope',
 ]
 
 
@@ -104,10 +104,10 @@ sensor_replies = {
     'temperature': {
         'get_temp': {
             'default': [
-                "It is {value}° in here",
-                "It's {value}°",
-                "The temperature is {value}° in here",
-                "The temperature is {value}°",
+                "it is {value}° in here",
+                "it's {value}°",
+                "the temperature is {value}° in here",
+                "the temperature is {value}°",
                 "{value}°",
             ]
         },
@@ -189,10 +189,10 @@ sensor_replies = {
     'humidity': {
         'get_humidity': {
             'default': [
-                "It is {value}% in here",
-                "It's {value}%",
-                "The humidity is {value}% in here",
-                "The humidity is {value}%",
+                "it is {value}% in here",
+                "it's {value}%",
+                "the humidity is {value}% in here",
+                "the humidity is {value}%",
                 "{value}%",
             ]
         },
@@ -275,17 +275,17 @@ sensor_replies = {
         'check_light_on_or_off': {
             'on': [
                 'on',
-                'the lights are on'
+                'the lights are on',
             ],
             'off': [
                 'off',
-                'the lights are off'
+                'the lights are off',
             ],
         },
         'check_light_off': {
             'yes': [
                 '{yes}',
-                '{yes}, the lights are off'
+                '{yes}, the lights are off',
             ],
             'no': [
                 '{no}',
@@ -306,13 +306,25 @@ sensor_replies = {
 
     # Camera ----------------------------------------------------------------
     'camera': {
-        'any': {
-            'hold_on': [
-                "capturing...",
-                "hold on, capturing...",
-                "hold on...",
-                "please wait...",
-                "wait...",
+        'hold_on': {
+            'default': [
+                'capturing...',
+                'hold on, capturing...',
+                'hold on...',
+                'please wait...',
+                'wait...',
+            ],
+        },
+    },
+
+    # Motion ----------------------------------------------------------------
+    'motion': {
+        'movement': {
+            'default': [
+                'something moved',
+                'i detected a movement',
+                'movement detected',
+                'i sense some movement',
             ],
         },
     },
