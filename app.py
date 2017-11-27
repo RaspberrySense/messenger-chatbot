@@ -226,11 +226,18 @@ def send_images(sender_id, num_images=1):
     for i in range(num_images):
         sleep(1)
         image_path = camera.capture_image()
-        log(image_path)
-        bot.send_image(sender_id, image_path)
+        if image_path:
+            log(image_path)
+            bot.send_image(sender_id, image_path)
+        else:
+            bot.send_text_message(sender_id,
+                                  'Cannot take a picture at the moment')
 
 
 def send_video(sender_id):
     video_path = camera.capture_video()
-    log(video_path)
-    bot.send_video(sender_id, video_path)
+    if video_path:
+        log(video_path)
+        bot.send_video(sender_id, video_path)
+    else:
+        bot.send_text_message(sender_id, 'Cannot record a video at the moment')
