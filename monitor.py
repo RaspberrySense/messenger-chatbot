@@ -1,26 +1,35 @@
-import os
 from collections import deque
-from threading import Timer
+import pickle
+from threading import Timer, Thread
 
 from gpiozero import MotionSensor, LED, LightSensor
 
-from app import get_sender_id, get_bot
+import app
 from replies import get_sensor_reply
 from sensors import temperature, humidity, camera
 
 
-bot = get_bot()
+MONITOR_RATE = 0.5      # seconds
 
 
 def send_alert(alert_text):
-    sender_id = get_sender_id()
+    sender_id = None
+    try:
+        with open('data.pickle', 'rb') as file:
+            sender_id = pickle.load(file)
+    except:
+        pass
     if sender_id:
-        bot.send_text_message(sender_id, alert_text)
+        app.bot.send_text_message(sender_id, alert_text)
+        t = Thread(target=app.send_video, args=(sender_id,))
+        t.start()
 
 
 # Motion sensor ---------------------------------------------------------------
 def alert_motion_detected():
-    send_alert(get_sensor_reply('motion', 'something_moved'))
+    send_alert(get_sensor_reply('motion', 'movement'))
+    app.log('Motion detected')
+    send_alert(get_sensor_reply('motion', 'capturing'))
 
 motion_sensor = MotionSensor(17)
 motion_sensor.when_motion = alert_motion_detected
@@ -29,80 +38,62 @@ motion_sensor.when_motion = alert_motion_detected
 # Light sensor ----------------------------------------------------------------
 def alert_light_on():
     send_alert('The lights were just switched on')
+    app.log('Lights switched on')
 
 
 def alert_light_off():
     send_alert('The lights were just switched off')
+    app.log('Lights switched off')
 
 light_sensor = LightSensor(4, threshold=0.9)
 light_sensor.when_light = alert_light_on
 light_sensor.when_dark = alert_light_off
 
 
-# Regression ------------------------------------------------------------------
+# Monitor ---------------------------------------------------------------------
 temperature_values = deque(maxlen=20)
 humidity_values = deque(maxlen=20)
-
-
-def best_fit_slope(X, Y):
-    x_bar = sum(X) / len(X)
-    y_bar = sum(Y) / len(Y)
-    n = len(X)
-
-    numer = sum([xi*yi for xi, yi in zip(X, Y)]) - n * x_bar * y_bar
-    denum = sum([xi**2 for xi in X]) - n * x_bar**2
-
-    return numer / denum
-
-
-def get_temperature_rate():
-    time = list(range(1, len(temperature_values) + 1))
-    temperature_rate = best_fit_slope(list(temperature_values), time)
-
-    return temperature_rate
-
-
-def get_humidity_rate():
-    time = list(range(1, len(humidity_values) + 1))
-    humidity_rate = best_fit_slope(list(humidity_values), time)
-
-    return humidity_rate
-
-
-# Monitor ---------------------------------------------------------------------
 red = LED(10)
+cooldown_time = 0
 
 
 def monitor():
+    global cooldown_time
+    cooldown_time -= 1 / MONITOR_RATE       # 1 second
     red.toggle()
 
     temperature_values.append(temperature.get_temperature())
     humidity_values.append(humidity.get_humidity())
 
-    os.system('cls' if os.name == 'nt' else 'clear')
-    temperature_rate = get_temperature_rate()   # ° per sec
-    if temperature_rate >= 2:
+    temperature_rate = ((temperature_values[-1] - temperature_values[0])
+                        / (len(temperature_values) * MONITOR_RATE))
+    if temperature_rate >= 2 and cooldown_time <= 0:
         send_alert('The temperature has been rising sharply at '
                    '{:.1f}° per second'.format(temperature_rate))
-    elif temperature_rate <= -2:
+        app.log('Temperature increasing')
+        cooldown_time = 30 / MONITOR_RATE      # 30 seconds
+    elif temperature_rate <= -2 and cooldown_time <= 0:
         send_alert('The temperature has been dropping sharply at '
                    '{:.1f}° per second'.format(temperature_rate))
+        app.log('Temperature decreasing')
+        cooldown_time = 30 / MONITOR_RATE      # 30 seconds
 
-    humidity_rate = get_humidity_rate()     # % per sec
-    if humidity_rate >= 4:
+    humidity_rate = ((humidity_values[-1] - humidity_values[0])
+                     / (len(humidity_values) * MONITOR_RATE))
+    if humidity_rate >= 2 and cooldown_time <= 0:
         send_alert('The humidity has been rising sharply at '
                    '{:.1f}% per second'.format(humidity_rate))
-    elif humidity_rate <= -4:
+        app.log('Humidity increasing')
+        cooldown_time = 30 / MONITOR_RATE      # 30 seconds
+    elif humidity_rate <= -2 and cooldown_time <= 0:
         send_alert('The humidity has been dropping sharply at '
                    '{:.1f}% per second'.format(humidity_rate))
+        app.log('Humidity decreasing')
+        cooldown_time = 30 / MONITOR_RATE      # 30 seconds
 
 
 if __name__ == '__main__':
-    temperature.init_sensor()
-    humidity.init_sensor()
-
     while True:
-        t = Timer(0.5, monitor)     # monitor every 0.5 seconds
+        t = Timer(MONITOR_RATE, monitor)
         t.start()
         t.join()
-
