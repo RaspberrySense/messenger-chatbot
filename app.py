@@ -1,7 +1,9 @@
 import os
+import pickle
 import random
 import sys
 from time import sleep
+from threading import Thread
 
 from flask import Flask, request
 from gpiozero import LED
@@ -18,16 +20,6 @@ green.on()
 # Globals ---------------------------------------------------------------------
 app = Flask(__name__)
 bot = Bot(secrets.PAGE_ACCESS_TOKEN)
-sender_id = None
-
-
-# Helpers ---------------------------------------------------------------------
-def get_bot():
-    return bot
-
-
-def get_sender_id():
-    return sender_id
 
 
 def log(message):
@@ -54,7 +46,6 @@ def verify():
 # -----------------------------------------------------------------------------
 @app.route('/', methods=['POST'])
 def webhook():
-    global sender_id
 
     data = request.get_json()
     log(data)
@@ -62,6 +53,8 @@ def webhook():
     if data['object'] == 'page':
         messaging_event = data['entry'][0]['messaging'][0]
         sender_id = messaging_event['sender']['id']
+        with open('data.pickle', 'wb') as file:
+            pickle.dump(sender_id, file)
 
         message_data = messaging_event.get('message')
         if message_data:
@@ -195,31 +188,20 @@ def send_response(sender_id, intent, value):
 
     # Camera:
     elif intent == 'get_image':
-        response = replies.get_sensor_reply('camera', 'any', 'hold_on')
-        bot.send_text_message(sender_id, response)
-        response = None
-        # making a gap between "hold_on" response and send image
-        sleep(1)
-        image_path = camera.capture_image()
-        log(image_path)
-        bot.send_image(sender_id, image_path)
+        response = replies.get_sensor_reply('camera', 'hold_on')
+        t = Thread(target=send_images, args=(sender_id,))
+        t.start()
 
     elif intent == 'get_images':
-        response = replies.get_sensor_reply('camera', 'any', 'hold_on')
-        bot.send_text_message(sender_id, response)
-        response = None
+        response = replies.get_sensor_reply('camera', 'hold_on')
         num_images = value if value else 3
-        for i in range(num_images):
-            sleep(1)
-            image_path = camera.capture_image()
-            bot.send_image(sender_id, image_path)
+        t = Thread(target=send_images, args=(sender_id, num_images))
+        t.start()
 
     elif intent == 'get_video':
-        response = replies.get_sensor_reply('camera', 'any', 'hold_on')
-        bot.send_text_message(sender_id, response)
-        response = None
-        video_path = camera.capture_video()
-        bot.send_video(sender_id, video_path)
+        response = replies.get_sensor_reply('camera', 'hold_on')
+        t = Thread(target=send_video, args=(sender_id,))
+        t.start()
 
     # Other:
     elif intent == 'get_greeting':
@@ -237,5 +219,18 @@ def send_response(sender_id, intent, value):
     else:
         response = replies.get_did_not_understand_reply()
 
-    if response:
-        bot.send_text_message(sender_id, response)
+    bot.send_text_message(sender_id, response)
+
+
+def send_images(sender_id, num_images=1):
+    for i in range(num_images):
+        sleep(1)
+        image_path = camera.capture_image()
+        log(image_path)
+        bot.send_image(sender_id, image_path)
+
+
+def send_video(sender_id):
+    video_path = camera.capture_video()
+    log(video_path)
+    bot.send_video(sender_id, video_path)
