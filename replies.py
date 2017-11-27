@@ -327,6 +327,16 @@ sensor_replies = {
                 'i sense some movement',
             ],
         },
+        'capturing': {
+            'default': [
+                "recording a video of what's happening...",
+                'capturing a video for you...',
+                'capturing a video...',
+                'recording a video for you...',
+                'recording a video...',
+                'sending you a video...',
+            ],
+        }
     },
 }
 
