@@ -54,10 +54,16 @@ light_sensor.when_dark = alert_light_off
 
 
 # Monitor ---------------------------------------------------------------------
-temperature_values = deque(maxlen=20)
-humidity_values = deque(maxlen=20)
 red = LED(10)
 cooldown_time = 0
+monitor_values = {
+    'temperature': deque(maxlen=20),
+    'humidity': deque(maxlen=20),
+}
+
+
+def get_rate(values):
+    return (values[-1] - values[0]) / (len(values) * MONITOR_RATE)
 
 
 def monitor():
@@ -65,34 +71,22 @@ def monitor():
     cooldown_time -= 1 / MONITOR_RATE       # 1 second
     red.toggle()
 
-    temperature_values.append(temperature.get_temperature())
-    humidity_values.append(humidity.get_humidity())
+    monitor_values['temperature'].append(temperature.get_temperature())
+    monitor_values['humidity'].append(humidity.get_humidity())
 
-    temperature_rate = ((temperature_values[-1] - temperature_values[0])
-                        / (len(temperature_values) * MONITOR_RATE))
-    if temperature_rate >= 2 and cooldown_time <= 0:
-        send_alert('The temperature has been rising sharply at '
-                   '{:.1f}° per second'.format(temperature_rate))
-        app.log('Temperature increasing')
-        cooldown_time = 30 / MONITOR_RATE      # 30 seconds
-    elif temperature_rate <= -2 and cooldown_time <= 0:
-        send_alert('The temperature has been dropping sharply at '
-                   '{:.1f}° per second'.format(temperature_rate))
-        app.log('Temperature decreasing')
-        cooldown_time = 30 / MONITOR_RATE      # 30 seconds
-
-    humidity_rate = ((humidity_values[-1] - humidity_values[0])
-                     / (len(humidity_values) * MONITOR_RATE))
-    if humidity_rate >= 2 and cooldown_time <= 0:
-        send_alert('The humidity has been rising sharply at '
-                   '{:.1f}% per second'.format(humidity_rate))
-        app.log('Humidity increasing')
-        cooldown_time = 30 / MONITOR_RATE      # 30 seconds
-    elif humidity_rate <= -2 and cooldown_time <= 0:
-        send_alert('The humidity has been dropping sharply at '
-                   '{:.1f}% per second'.format(humidity_rate))
-        app.log('Humidity decreasing')
-        cooldown_time = 30 / MONITOR_RATE      # 30 seconds
+    for sensor_type in monitor_values:
+        rate = get_rate(monitor_values[sensor_type])
+        if cooldown_time <= 0:
+            trend = None
+            if rate >= 2:
+                trend = 'rising'
+            elif rate <= -2:
+                trend = 'dropping'
+        if trend:
+            send_alert(get_sensor_reply(sensor_type, 'trend', trend,
+                                        value=rate))
+            app.log(sensor_type + ' ' + trend)
+            cooldown_time = 30 / MONITOR_RATE      # 30 seconds
 
 
 if __name__ == '__main__':
