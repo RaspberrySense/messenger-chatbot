@@ -129,6 +129,16 @@ sensor_replies = {
                 "{no}, it's above {value}° in here",
             ]
         },
+        'trend': {
+            'rising': [
+                'The temperature has been rising sharply at {value:.1f}° '
+                'per second'
+            ],
+            'dropping': [
+                'The temperature has been dropping sharply at {value:.1f}° '
+                'per second'
+            ],
+        },
     },
 
     # Humidity ----------------------------------------------------------------
@@ -213,6 +223,16 @@ sensor_replies = {
                 "{no}, it's above {value}%",
                 "{no}, it's above {value}% in here",
             ]
+        },
+        'trend': {
+            'rising': [
+                'The humidity has been rising sharply at {value:.1f}% '
+                'per second'
+            ],
+            'dropping': [
+                'The humidity has been dropping sharply at {value:.1f}% '
+                'per second'
+            ],
         },
     },
 
