@@ -68,6 +68,8 @@ def webhook():
                     if number_data:
                         value = number_data[0]['value']
                     send_response(sender_id, intent, value)
+                else:
+                    send_response(sender_id, None, None)
 
     return 'OK', 200
 
